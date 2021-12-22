@@ -35,10 +35,10 @@ rawdata/bmpraw090.bmp 1 69 111 87 23
 rawdata/bmpraw091.bmp 1 104 111 87 23
 rawdata/bmpraw092.bmp 1 69 136 87 23
 rawdata/bmpraw093.bmp 1 104 136 87 23
-rawdata/bmpraw094.bmp 1 82 163 75 20
-rawdata/bmpraw095.bmp 1 117 163 75 20
-rawdata/bmpraw096.bmp 1 82 188 75 20
-rawdata/bmpraw097.bmp 1 117 188 75 20
+rawdata/bmpraw094.bmp 1 82 163 76 20
+rawdata/bmpraw095.bmp 1 117 163 76 20
+rawdata/bmpraw096.bmp 1 82 188 76 20
+rawdata/bmpraw097.bmp 1 117 188 76 20
 rawdata/bmpraw098.bmp 1 72 98 92 24
 rawdata/bmpraw099.bmp 1 107 98 92 24
 rawdata/bmpraw100.bmp 1 72 124 92 24

@@ -20,8 +20,8 @@ for imgname in myfiles:
     #擷取車牌
     emptydir(dirname)
     img = cv2.imread(imgname)
-    detector = cv2.CascadeClassifier('haar_carplate.xml')
-    signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=4, minSize=(20, 20))
+    detector = cv2.CascadeClassifier('haar_carplate2.xml')
+    signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=4, minSize=(76, 20))
     if len(signs) > 0 :
         for (x, y, w, h) in signs:          
             image1 = Image.open(imgname)
@@ -30,14 +30,14 @@ for imgname in myfiles:
             image3.save('tem.jpg')
             image4 = cv2.imread('tem.jpg')
             gray = cv2.cvtColor(image4, cv2.COLOR_RGB2GRAY)
-            _, img_thre = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
+            _, img_thre = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY)
             cv2.imwrite('tem.jpg', img_thre)
         #分割文字
         img_tem = cv2.imread('tem.jpg')
         gray = cv2.cvtColor(img_tem, cv2.COLOR_BGR2GRAY)
         _,thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)  #轉為黑白
         contours1 = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  #尋找輪廓
-        contours = contours1[1]  #取得輪廓
+        contours = contours1[0]  #取得輪廓
         letter_image_regions = []  #文字圖形串列
         for contour in contours:  #依序處理輪廓
             (x, y, w, h) = cv2.boundingRect(contour)  #單一輪廓資料

@@ -12,7 +12,7 @@ from time import sleep
 
 print('開始擷取車牌數字！')
 emptydir('cropNum')
-myfiles = glob.glob('cropPlate\*.jpg')
+myfiles = glob.glob('testdata\*.jpg')
 for f in myfiles:
     filename = (f.split('\\'))[-1].replace('.jpg', '')  #移除檔名中的「.jpg」
     emptydir('cropNum/' + filename)  #以車牌號碼做資料夾名稱
@@ -20,7 +20,7 @@ for f in myfiles:
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  #灰階
     _,thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)  #轉為黑白
     contours1 = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  #尋找輪廓
-    contours = contours1[1]  #取得輪廓
+    contours = contours1[0]  #取得輪廓
     letter_image_regions = []  #文字圖形串列
     for contour in contours:  #依序處理輪廓
         (x, y, w, h) = cv2.boundingRect(contour)  #單一輪廓資料

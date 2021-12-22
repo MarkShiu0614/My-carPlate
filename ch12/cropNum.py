@@ -10,11 +10,11 @@ import imutils
 from time import sleep
 
 emptydir('cropMono')
-image = cv2.imread('cropPlate/1800DE.jpg')
+image = cv2.imread('testdata/Train15.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  #灰階
-_,thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)  #轉為黑白
+_,thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV)  #轉為黑白
 contours1 = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  #尋找輪廓
-contours = contours1[1] #取得輪廓
+contours = contours1[0] #取得輪廓
 letter_image_regions = []  #文字圖形串列
 for contour in contours:  #依序處理輪廓
     (x, y, w, h) = cv2.boundingRect(contour)  #單一輪廓資料
@@ -30,3 +30,8 @@ for letter_bounding_box in letter_image_regions:  #依序處理輪廓資料
         letter_image = cv2.resize(letter_image, (18, 38))
         cv2.imwrite('cropMono/{}.jpg'.format(i), letter_image)  #存檔
         i += 1
+
+
+cv2.imshow("test", thresh)
+#cv2.imshow("test1", thresh)
+cv2.waitKey(0)
