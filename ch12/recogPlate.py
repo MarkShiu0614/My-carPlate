@@ -21,16 +21,16 @@ dirname = 'recogdata'
 emptydir(dirname)
 img = cv2.imread('testdata/' + imgname + '.jpg')
 detector = cv2.CascadeClassifier('haar_carplate.xml')
-signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=8, minSize=(76, 20))
+signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(76, 20))
 if len(signs) > 0 :
     for (x, y, w, h) in signs:          
         image1 = Image.open('testdata/' + imgname + '.jpg')
-        image2 = image1.crop((x, y, x+w, y+h))
+        image2 = image1.crop((x+10, y+10, x+w-20, y+h-10))
         image3 = image2.resize((140, 40), Image.ANTIALIAS)
         image3.save('tem.jpg')
         image4 = cv2.imread('tem.jpg')
         gray = cv2.cvtColor(image4, cv2.COLOR_RGB2GRAY)
-        _, img_thre = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY)
+        _, img_thre = cv2.threshold(gray, 88, 255, cv2.THRESH_BINARY)
         cv2.imwrite('tem.jpg', img_thre)
     #分割文字
     img_tem = cv2.imread('tem.jpg')
@@ -47,7 +47,7 @@ if len(signs) > 0 :
     i=1
     for letter_bounding_box in letter_image_regions:  #依序處理輪廓資料
         x, y, w, h = letter_bounding_box
-        if w>=5 and h>32 and h<40:  #長度>6且高度在30-48才是文字
+        if w>=2 and h>26 and h<40:  #長度>6且高度在30-48才是文字
             letter_image = gray[y:y+h, x:x+w]  #擷取圖形
             letter_image = cv2.resize(letter_image, (18, 38))
             cv2.imwrite(dirname + '/{}.jpg'.format(i), letter_image)  #存檔

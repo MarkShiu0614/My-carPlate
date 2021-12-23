@@ -18,8 +18,8 @@ emptydir(dstdir)
 for imgname in myfiles:
     filename = (imgname.split('\\'))[-1]  #取得檔案名稱
     img = cv2.imread(imgname)  #讀入圖形
-    detector = cv2.CascadeClassifier('haar_carplate2.xml')
-    signs = detector.detectMultiScale(img, scaleFactor=1.2, minNeighbors=4, minSize=(76, 20))  #框出車牌
+    detector = cv2.CascadeClassifier('haar_carplate.xml')
+    signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(20, 20))  #框出車牌
     #割取車牌
     if len(signs) > 0 :
         for (x, y, w, h) in signs:          
@@ -29,8 +29,10 @@ for imgname in myfiles:
             image3.save(dstdir + '/tem.jpg')
             image4 = cv2.imread(dstdir + '/tem.jpg')  #以opencv讀車牌檔
             img_gray = cv2.cvtColor(image4, cv2.COLOR_RGB2GRAY)  #灰階
-            _, img_thre = cv2.threshold(img_gray, 180, 255, cv2.THRESH_BINARY)  #黑白
+            _, img_thre = cv2.threshold(img_gray, 80, 255, cv2.THRESH_BINARY)  #黑白
             cv2.imwrite(dstdir + '/'+ filename, img_thre)
+            # cv2.imshow("123", img_gray)
+            # cv2.waitKey(0)
             # cv2.imwrite(dstdir + '/'+ 'g' + filename, image2)
     else:
         print(filename)
