@@ -1,0 +1,1 @@
+python test.py -i Train01.jpg

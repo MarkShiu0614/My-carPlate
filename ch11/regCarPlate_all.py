@@ -5,7 +5,7 @@ files = glob.glob("realPlate/*.jpg")
 for file in files:
     print('圖片檔案：' + file)
     img = cv2.imread(file)
-    detector = cv2.CascadeClassifier('haar_carplate1.xml')
+    detector = cv2.CascadeClassifier('carplate.xml')
     signs = detector.detectMultiScale(img, minSize=(76, 20), scaleFactor=1.1, minNeighbors=4)
     if len(signs) > 0 :
         for (x, y, w, h) in signs:          
@@ -17,5 +17,6 @@ for file in files:
     cv2.imshow('Frame', img)
     key = cv2.waitKey(0)
     cv2.destroyAllWindows()
+    cv2.imwrite(file+'-1', img)
     if key == 113 or key==81:  #按q鍵結束
         break

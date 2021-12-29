@@ -70,4 +70,4 @@ if len(signs) > 0 :
         print(labels[int(predictions[i])], end='') 
 else:
     print('無法擷取車牌！')
-os.remove('tem.jpg')
+# os.remove('tem.jpg')

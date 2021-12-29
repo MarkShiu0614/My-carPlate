@@ -1,0 +1,1 @@
+python test1.py -i Train01.jpg -o Train001.jpg

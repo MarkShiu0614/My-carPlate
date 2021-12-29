@@ -1,0 +1,81 @@
+def emptydir(dirname):  #清空資料夾
+    if os.path.isdir(dirname):  #資料夾存在就刪除
+        shutil.rmtree(dirname)
+        sleep(2)  #需延遲,否則會出錯
+    os.mkdir(dirname)  #建立資料夾
+
+from keras.models import load_model
+import argparse
+import imutils 
+from PIL import Image
+import numpy as np
+import sys 
+import cv2
+import shutil, os
+from time import sleep
+
+labels = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z']  #標籤值
+
+# argument用法
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i", "--input", required=True, help="path to input image")
+# args = vars(ap.parse_args())
+# img = cv2.imread('testdata/' + args["input"])
+
+# 擷取車牌
+# sys.argv[]用法
+path = 'testImage/'
+img = cv2.imread(os.path.join(path, sys.argv[1]))
+dirname = 'recogdata'
+emptydir(dirname)
+detector = cv2.CascadeClassifier('haar_carplate.xml')
+signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(76, 20))   # 框出車牌
+if len(signs) > 0 :
+    for (x, y, w, h) in signs:          
+        image1 = Image.open(os.path.join(path, sys.argv[1]))
+        image2 = image1.crop((x+10, y+10, x+w-20, y+h-10))  #擷取車牌圖形
+        image3 = image2.resize((140, 40), Image.ANTIALIAS)  # resize為140X40
+        image3.save('tem.jpg')
+        image4 = cv2.imread('tem.jpg')
+        gray = cv2.cvtColor(image4, cv2.COLOR_RGB2GRAY)
+        _, img_thre = cv2.threshold(gray, 88, 255, cv2.THRESH_BINARY)
+        cv2.imwrite('tem.jpg', img_thre)    # 將灰階車牌存檔為'tem.jpg'
+    #分割文字
+    img_tem = cv2.imread('tem.jpg')
+    gray = cv2.cvtColor(img_tem, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)  #轉為黑白
+    contours1 = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  #尋找輪廓
+    contours = contours1[0]  #取得輪廓
+    letter_image_regions = []
+    for contour in contours:  #依序處理輪廓
+        (x, y, w, h) = cv2.boundingRect(contour)  #單一輪廓資料
+        letter_image_regions.append((x, y, w, h))  #輪廓資料加入串列
+    letter_image_regions = sorted(letter_image_regions, key=lambda x: x[0])  #按X坐標排序
+    #存檔
+    i=1
+    for letter_bounding_box in letter_image_regions:  #依序處理輪廓資料
+        x, y, w, h = letter_bounding_box
+        if w>=2 and h>26 and h<40:  #長度>2且高度在26-40才是文字
+            letter_image = gray[y:y+h, x:x+w]  #擷取圖形
+            letter_image = cv2.resize(letter_image, (18, 38))
+            cv2.imwrite(dirname + '/{}.jpg'.format(i), letter_image)  #存檔
+            i += 1
+    #辨識車牌
+    datan = 0  #車牌文字數
+    for fname in os.listdir(dirname):
+        if os.path.isfile(os.path.join(dirname, fname)):
+            datan += 1
+    tem_data = []
+    for index in range(1, (datan+1)):  #讀取預測資料
+        tem_data.append((np.array(Image.open("recogdata/" + str(index) +".jpg")))/255.0)
+    real_data = np.stack(tem_data)
+    real_data1 = np.expand_dims(real_data, axis=3)  #(7,38,18,1)
+    model = load_model("carplate_model.hdf5")  #讀取模型
+    predictions = np.argmax(model.predict(real_data1), axis=-1)
+    print('License Plate：', end=' ')
+    for i in range(len(predictions)):  #顯示結果 
+        print(labels[int(predictions[i])], end='')
+    os.remove('tem.jpg')  #移除暫存檔
+
+else:
+    print('無法擷取車牌！', end="")

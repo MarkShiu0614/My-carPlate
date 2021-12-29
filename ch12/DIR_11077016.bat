@@ -1,1 +1,0 @@
-Python recogPlate.py Train01.jpg 

@@ -21,16 +21,17 @@ for imgname in myfiles:
     emptydir(dirname)
     img = cv2.imread(imgname)
     detector = cv2.CascadeClassifier('haar_carplate.xml')
-    signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(76, 20))
+    signs = detector.detectMultiScale(img, scaleFactor=1.1, minNeighbors=5, minSize=(20, 20))
     if len(signs) > 0 :
         for (x, y, w, h) in signs:          
             image1 = Image.open(imgname)
-            image2 = image1.crop((x+10, y+10, x+w-20, y+h-10))
+            # image2 = image1.crop((x, y, x+w, y+h))
+            image2 = image1.crop((x+15, y+10, x+w-10, y+h-10))
             image3 = image2.resize((140, 40), Image.ANTIALIAS)
             image3.save('tem.jpg')
             image4 = cv2.imread('tem.jpg')
             gray = cv2.cvtColor(image4, cv2.COLOR_RGB2GRAY)
-            _, img_thre = cv2.threshold(gray, 88, 255, cv2.THRESH_BINARY)
+            _, img_thre = cv2.threshold(gray, 85, 255, cv2.THRESH_BINARY)
             cv2.imwrite('tem.jpg', img_thre)
         #分割文字
         img_tem = cv2.imread('tem.jpg')

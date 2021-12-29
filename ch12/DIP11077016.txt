@@ -1,0 +1,11 @@
+
+C:\Users\lab602\Desktop\carPlate\My-carPlate\ch12>python DIP11077016.py Train01.jpg 
+License Plate： AWD6989
+C:\Users\lab602\Desktop\carPlate\My-carPlate\ch12>python DIP11077016.py Train02.jpg 
+License Plate： BEF1971
+C:\Users\lab602\Desktop\carPlate\My-carPlate\ch12>python DIP11077016.py Train04.jpg 
+無法擷取車牌！
+C:\Users\lab602\Desktop\carPlate\My-carPlate\ch12>python DIP11077016.py Train11.jpg  
+License Plate： RDD1773
+C:\Users\lab602\Desktop\carPlate\My-carPlate\ch12>python DIP11077016.py Train15.jpg 
+License Plate： AXN7077
